@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Stock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+        }
+
+        .insta-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .active-tab {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .inactive-tab {
+            color: #a8a8a8;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        /* Simulation of Mobile Frame */
+        .mobile-frame {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            border-left: 1px solid #dbdbdb;
+            border-right: 1px solid #dbdbdb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="mobile-frame flex flex-col justify-between">
+
+        <header class="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-tight" style="font-family: 'Cursive', sans-serif;">Star Stock ✨</h1>
+            <button onclick="refreshData()" class="text-blue-500 font-medium text-sm">รีเฟรช</button>
+        </header>
+
+        <main id="content-area" class="flex-grow overflow-y-auto p-4 pb-20">
+
+            <div id="page-add" class="page-section">
+                <div class="text-center mb-6">
+                    <div
+                        class="w-20 h-20 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-2 border border-gray-300">
+                        <i data-lucide="package-plus" class="w-8 h-8 text-gray-400"></i>
+                    </div>
+                    <h2 class="font-semibold text-lg">เพิ่มสินค้าใหม่</h2>
+                </div>
+
+                <form id="addForm" class="space-y-4">
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 ml-1">รหัสสินค้า</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="p_id"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-gray-400"
+                                placeholder="SKU-001">
+                            <button type="button" onclick="startScan()" class="bg-gray-800 text-white p-3 rounded-lg"><i
+                                    data-lucide="scan-line"></i></button>
+                        </div>
+                        <div id="reader" width="300px"></div>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 ml-1">ชื่อสินค้า</label>
+                        <input type="text" id="p_name"
+                            class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-gray-400"
+                            placeholder="เช่น กาแฟคั่วบด">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 ml-1">หน่วยนับ</label>
+                            <input type="text" id="p_unit"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-gray-400"
+                                placeholder="ชิ้น/กล่อง">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 ml-1">จำนวนคงเหลือ</label>
+                            <input type="number" id="p_qty"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-gray-400"
+                                placeholder="0">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 ml-1">แจ้งเตือนเมื่อต่ำกว่า</label>
+                        <input type="number" id="p_min"
+                            class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-gray-400"
+                            placeholder="5">
+                    </div>
+
+                    <button type="submit" id="btn-submit"
+                        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg transition-all mt-4">บันทึกข้อมูล</button>
+                </form>
+            </div>
+
+            <div id="page-list" class="page-section hide">
+                <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+                    <button onclick="filterList('all')"
+                        class="filter-chip bg-black text-white px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap">ทั้งหมด</button>
+                    <button onclick="filterList('low')"
+                        class="filter-chip bg-gray-100 text-gray-600 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap border border-gray-200">⚠️
+                        ใกล้หมด</button>
+                    <button onclick="filterList('sort')"
+                        class="filter-chip bg-gray-100 text-gray-600 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap border border-gray-200">มาก
+                        -> น้อย</button>
+                </div>
+
+                <div id="inventory-grid" class="grid grid-cols-1 gap-3">
+                    <div class="text-center py-10 text-gray-400 animate-pulse">กำลังโหลดข้อมูล...</div>
+                </div>
+            </div>
+
+            <div id="page-dash" class="page-section hide">
+                <h2 class="text-lg font-bold mb-4">ภาพรวมสต็อก</h2>
+
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-2xl shadow-md">
+                        <div class="text-xs opacity-80 mb-1">สินค้าทั้งหมด</div>
+                        <div class="text-3xl font-bold" id="dash-total">0</div>
+                        <div class="text-xs mt-1">รายการ</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-red-500 to-pink-500 text-white p-4 rounded-2xl shadow-md">
+                        <div class="text-xs opacity-80 mb-1">ต้องเติมของ</div>
+                        <div class="text-3xl font-bold" id="dash-alert">0</div>
+                        <div class="text-xs mt-1">รายการ</div>
+                    </div>
+                </div>
+
+                <h3 class="font-semibold text-gray-700 mb-2">สรุปรายการด่วน</h3>
+                <ul id="dash-urgent-list" class="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
+                </ul>
+            </div>
+
+        </main>
+
+        <nav
+            class="fixed bottom-0 w-full max-w-[450px] bg-white border-t border-gray-200 flex justify-around py-3 pb-5 z-40 mobile-frame left-0 right-0 mx-auto">
+            <button onclick="switchTab('page-add', this)" class="nav-btn active-tab flex flex-col items-center">
+                <i data-lucide="plus-square" class="w-6 h-6 mb-1"></i>
+            </button>
+            <button onclick="switchTab('page-list', this)" class="nav-btn inactive-tab flex flex-col items-center">
+                <i data-lucide="list" class="w-6 h-6 mb-1"></i>
+            </button>
+            <button onclick="switchTab('page-dash', this)" class="nav-btn inactive-tab flex flex-col items-center">
+                <i data-lucide="pie-chart" class="w-6 h-6 mb-1"></i>
+            </button>
+        </nav>
+
+    </div>
+
+    <script>
+        // **********************************************
+        // ⚠️ ใส่ URL ของ Google Apps Script ที่นี่
+        // **********************************************
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKzHNqp893dFaCkyAl2KR4K4mrMWurRo6ZBhn6pgkihIDUZVtae991BQO_AFCTatzd/exec";
+
+        // Initialize Icons
+        lucide.createIcons();
+
+        let allProducts = [];
+
+        // --- Navigation Logic ---
+        function switchTab(pageId, btn) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(el => el.classList.add('hide'));
+            // Show selected page
+            document.getElementById(pageId).classList.remove('hide');
+
+            // Update Bottom Nav UI
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('active-tab');
+                el.classList.add('inactive-tab');
+            });
+            btn.classList.add('active-tab');
+            btn.classList.remove('inactive-tab');
+
+            if (pageId === 'page-list' || pageId === 'page-dash') {
+                fetchData();
+            }
+        }
+
+        // --- Fetch Data ---
+        function refreshData() {
+            fetchData();
+            alert('อัพเดทข้อมูลเรียบร้อย');
+        }
+
+        function fetchData() {
+            fetch(`${SCRIPT_URL}?action=getProducts`)
+                .then(response => response.json())
+                .then(data => {
+                    allProducts = data;
+                    renderList(data);
+                    renderDashboard(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // --- Render List ---
+        function renderList(products) {
+            const grid = document.getElementById('inventory-grid');
+            grid.innerHTML = "";
+
+            if (products.length === 0) {
+                grid.innerHTML = `<div class="text-center text-gray-400 mt-10">ไม่พบข้อมูล</div>`;
+                return;
+            }
+
+            products.forEach(p => {
+                const isLow = p.qty <= p.min_alert;
+                const statusClass = isLow ? "text-red-500 bg-red-50 border-red-100" : "text-green-600 bg-green-50 border-green-100";
+                const statusText = isLow ? "ใกล้หมด" : "ปกติ";
+
+                const html = `
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-lg font-bold text-gray-500">
+                            ${p.name.charAt(0)}
+                        </div>
+                        <div>
+                            <div class="font-bold text-gray-800">${p.name}</div>
+                            <div class="text-xs text-gray-400">ID: ${p.id}</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-bold text-lg">${p.qty} <span class="text-xs font-normal text-gray-400">${p.unit}</span></div>
+                        <span class="text-xs px-2 py-0.5 rounded-full border ${statusClass}">${statusText}</span>
+                    </div>
+                </div>
+            `;
+                grid.innerHTML += html;
+            });
+        }
+
+        // --- Filter Logic ---
+        function filterList(type) {
+            let filtered = [...allProducts];
+
+            // Reset Chip Styles (Simple toggle for demo)
+            document.querySelectorAll('.filter-chip').forEach(c => {
+                c.classList.remove('bg-black', 'text-white');
+                c.classList.add('bg-gray-100', 'text-gray-600');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-600');
+            event.target.classList.add('bg-black', 'text-white');
+
+            if (type === 'low') {
+                filtered = filtered.filter(p => p.qty <= p.min_alert);
+            } else if (type === 'sort') {
+                filtered.sort((a, b) => b.qty - a.qty);
+            }
+
+            renderList(filtered);
+        }
+
+        // --- Dashboard Logic ---
+        function renderDashboard(products) {
+            document.getElementById('dash-total').innerText = products.length;
+
+            const lowStockItems = products.filter(p => p.qty <= p.min_alert);
+            document.getElementById('dash-alert').innerText = lowStockItems.length;
+
+            const urgentList = document.getElementById('dash-urgent-list');
+            urgentList.innerHTML = "";
+
+            lowStockItems.slice(0, 5).forEach(p => {
+                urgentList.innerHTML += `
+                <li class="p-3 flex justify-between items-center text-sm">
+                    <span class="font-medium text-gray-700">${p.name}</span>
+                    <span class="text-red-500 font-bold text-xs bg-red-100 px-2 py-1 rounded">เหลือ ${p.qty} ${p.unit}</span>
+                </li>
+            `;
+            });
+        }
+
+        // --- Add Product Logic ---
+        document.getElementById('addForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            btn.innerText = "กำลังบันทึก...";
+            btn.disabled = true;
+
+            const data = {
+                id: document.getElementById('p_id').value,
+                name: document.getElementById('p_name').value,
+                unit: document.getElementById('p_unit').value,
+                qty: document.getElementById('p_qty').value,
+                min_alert: document.getElementById('p_min').value
+            };
+
+            fetch(`${SCRIPT_URL}?action=addProduct`, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(result => {
+                    alert('บันทึกสำเร็จ!');
+                    document.getElementById('addForm').reset();
+                    btn.innerText = "บันทึกข้อมูล";
+                    btn.disabled = false;
+                    fetchData(); // update data in background
+                })
+                .catch(err => {
+                    alert('เกิดข้อผิดพลาด');
+                    btn.innerText = "บันทึกข้อมูล";
+                    btn.disabled = false;
+                });
+        });
+
+        // --- QR Scanner Logic ---
+        function startScan() {
+            const html5QrCode = new Html5Qrcode("reader");
+            const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+                document.getElementById('p_id').value = decodedText;
+                html5QrCode.stop();
+                document.getElementById('reader').innerHTML = ""; // clear div
+            };
+            const config = {fps: 10, qrbox: {width: 250, height: 250}};
+
+            // Note: Camera requires HTTPS
+            html5QrCode.start({facingMode: "environment"}, config, qrCodeSuccessCallback)
+                .catch(err => {
+                    alert("ไม่สามารถเปิดกล้องได้ (ต้องใช้ผ่าน HTTPS หรือ localhost)");
+                });
+        }
+
+        // Initial Load
+        fetchData();
+
+    </script>
+
+</body>
+
+</html>
