@@ -5,351 +5,455 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Star Stock</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
-
         body {
+            margin: 0;
             font-family: 'Inter', sans-serif;
-            background-color: #fafafa;
+            background: #fafafa;
+            color: #262626;
         }
 
-        .insta-shadow {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        /* Header */
+        header {
+            background: #fff;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 12px 20px;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
         }
 
-        .active-tab {
-            color: #000;
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            background: #fff;
+            border-bottom: 1px solid #dbdbdb;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid #0095f6;
+            color: #0095f6;
             font-weight: 600;
         }
 
-        .inactive-tab {
-            color: #a8a8a8;
+        /* Content */
+        .content {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
         }
 
-        .hide {
+        .page {
             display: none;
         }
 
-        /* Simulation of Mobile Frame */
-        .mobile-frame {
-            max-width: 450px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-            position: relative;
-            border-left: 1px solid #dbdbdb;
-            border-right: 1px solid #dbdbdb;
+        .page.active {
+            display: block;
+        }
+
+        /* Card */
+        .card {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            background: #0095f6;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        button:hover {
+            background: #0077c5;
+        }
+
+        .btn-secondary {
+            background: #efefef;
+            color: #333;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background: #fafafa;
+            font-weight: 600;
+        }
+
+        .low {
+            color: #ed4956;
+            font-weight: 600;
+        }
+
+        /* QR */
+        #qr-reader {
+            width: 100%;
+            max-width: 300px;
+            margin: 10px auto;
+            display: none;
+        }
+
+        /* Summary */
+        .summary-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #0095f6, #6ec6ff);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .summary h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .summary p {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 5px 0 0;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="mobile-frame flex flex-col justify-between">
+    <header>⭐ Star Stock</header>
 
-        <header class="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-tight" style="font-family: 'Cursive', sans-serif;">Star Stock ✨</h1>
-            <button onclick="refreshData()" class="text-blue-500 font-medium text-sm">รีเฟรช</button>
-        </header>
+    <div class="tabs">
+        <div class="tab active" data-page="product">สินค้า</div>
+        <div class="tab" data-page="stock">คงเหลือ</div>
+        <div class="tab" data-page="report">รายงาน</div>
+    </div>
 
-        <main id="content-area" class="flex-grow overflow-y-auto p-4 pb-20">
+    <div class="content">
 
-            <div id="page-add" class="page-section">
-                <div class="text-center mb-6">
-                    <div
-                        class="w-20 h-20 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-2 border border-gray-300">
-                        <i data-lucide="package-plus" class="w-8 h-8 text-gray-400"></i>
-                    </div>
-                    <h2 class="font-semibold text-lg">เพิ่มสินค้าใหม่</h2>
+        <!-- Product Page -->
+        <div class="page active" id="product">
+            <div class="card">
+                <h2>เพิ่ม / แก้ไขสินค้า</h2>
+
+                <div id="qr-reader"></div>
+
+                <div class="form-group">
+                    <button type="button" class="btn-secondary" onclick="toggleQR()">📷 Scan QR</button>
                 </div>
 
-                <form id="addForm" class="space-y-4">
-                    <div>
-                        <label class="text-xs font-semibold text-gray-500 ml-1">รหัสสินค้า</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="p_id"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-gray-400"
-                                placeholder="SKU-001">
-                            <button type="button" onclick="startScan()" class="bg-gray-800 text-white p-3 rounded-lg"><i
-                                    data-lucide="scan-line"></i></button>
-                        </div>
-                        <div id="reader" width="300px"></div>
-                    </div>
+                <div class="form-group">
+                    <label>รหัสสินค้า</label>
+                    <input id="pid">
+                </div>
 
-                    <div>
-                        <label class="text-xs font-semibold text-gray-500 ml-1">ชื่อสินค้า</label>
-                        <input type="text" id="p_name"
-                            class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-gray-400"
-                            placeholder="เช่น กาแฟคั่วบด">
-                    </div>
+                <div class="form-group">
+                    <label>ชื่อสินค้า</label>
+                    <input id="pname">
+                </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-500 ml-1">หน่วยนับ</label>
-                            <input type="text" id="p_unit"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-gray-400"
-                                placeholder="ชิ้น/กล่อง">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-500 ml-1">จำนวนคงเหลือ</label>
-                            <input type="number" id="p_qty"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-gray-400"
-                                placeholder="0">
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label>หน่วยนับ</label>
+                    <input id="punit">
+                </div>
 
-                    <div>
-                        <label class="text-xs font-semibold text-gray-500 ml-1">แจ้งเตือนเมื่อต่ำกว่า</label>
-                        <input type="number" id="p_min"
-                            class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-gray-400"
-                            placeholder="5">
-                    </div>
+                <div class="form-group">
+                    <label>จำนวนคงเหลือ</label>
+                    <input type="number" id="pqty">
+                </div>
 
-                    <button type="submit" id="btn-submit"
-                        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg transition-all mt-4">บันทึกข้อมูล</button>
-                </form>
+                <div class="form-group">
+                    <label>จำนวนขั้นต่ำแจ้งเตือน</label>
+                    <input type="number" id="pmin">
+                </div>
+
+                <button onclick="saveProduct()">💾 บันทึก</button>
+
             </div>
+        </div>
 
-            <div id="page-list" class="page-section hide">
-                <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
-                    <button onclick="filterList('all')"
-                        class="filter-chip bg-black text-white px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap">ทั้งหมด</button>
-                    <button onclick="filterList('low')"
-                        class="filter-chip bg-gray-100 text-gray-600 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap border border-gray-200">⚠️
-                        ใกล้หมด</button>
-                    <button onclick="filterList('sort')"
-                        class="filter-chip bg-gray-100 text-gray-600 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap border border-gray-200">มาก
-                        -> น้อย</button>
+
+        <!-- Stock Page -->
+        <div class="page" id="stock">
+            <div class="card">
+                <h2>รายงานสินค้าคงเหลือ</h2>
+
+                <div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap">
+                    <select id="sortSelect" onchange="renderStock()">
+                        <option value="desc">คงเหลือมาก → น้อย</option>
+                        <option value="asc">คงเหลือน้อย → มาก</option>
+                    </select>
+
+                    <select id="alertSelect" onchange="renderStock()">
+                        <option value="all">ทั้งหมด</option>
+                        <option value="low">ใกล้หมด</option>
+                    </select>
                 </div>
 
-                <div id="inventory-grid" class="grid grid-cols-1 gap-3">
-                    <div class="text-center py-10 text-gray-400 animate-pulse">กำลังโหลดข้อมูล...</div>
-                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>รหัส</th>
+                            <th>ชื่อ</th>
+                            <th>คงเหลือ</th>
+                            <th>หน่วย</th>
+                            <th>สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockTable"></tbody>
+                </table>
+
             </div>
+        </div>
 
-            <div id="page-dash" class="page-section hide">
-                <h2 class="text-lg font-bold mb-4">ภาพรวมสต็อก</h2>
 
-                <div class="grid grid-cols-2 gap-3 mb-6">
-                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-2xl shadow-md">
-                        <div class="text-xs opacity-80 mb-1">สินค้าทั้งหมด</div>
-                        <div class="text-3xl font-bold" id="dash-total">0</div>
-                        <div class="text-xs mt-1">รายการ</div>
+        <!-- Report Page -->
+        <div class="page" id="report">
+            <div class="card">
+                <h2>สรุปรายงาน</h2>
+
+                <div class="summary-box">
+                    <div class="summary">
+                        <h3>จำนวนสินค้า</h3>
+                        <p id="sumItems">0</p>
                     </div>
-                    <div class="bg-gradient-to-br from-red-500 to-pink-500 text-white p-4 rounded-2xl shadow-md">
-                        <div class="text-xs opacity-80 mb-1">ต้องเติมของ</div>
-                        <div class="text-3xl font-bold" id="dash-alert">0</div>
-                        <div class="text-xs mt-1">รายการ</div>
+
+                    <div class="summary">
+                        <h3>จำนวนรวมทั้งหมด</h3>
+                        <p id="sumQty">0</p>
+                    </div>
+
+                    <div class="summary">
+                        <h3>สินค้าใกล้หมด</h3>
+                        <p id="sumLow">0</p>
                     </div>
                 </div>
 
-                <h3 class="font-semibold text-gray-700 mb-2">สรุปรายการด่วน</h3>
-                <ul id="dash-urgent-list" class="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
-                </ul>
             </div>
-
-        </main>
-
-        <nav
-            class="fixed bottom-0 w-full max-w-[450px] bg-white border-t border-gray-200 flex justify-around py-3 pb-5 z-40 mobile-frame left-0 right-0 mx-auto">
-            <button onclick="switchTab('page-add', this)" class="nav-btn active-tab flex flex-col items-center">
-                <i data-lucide="plus-square" class="w-6 h-6 mb-1"></i>
-            </button>
-            <button onclick="switchTab('page-list', this)" class="nav-btn inactive-tab flex flex-col items-center">
-                <i data-lucide="list" class="w-6 h-6 mb-1"></i>
-            </button>
-            <button onclick="switchTab('page-dash', this)" class="nav-btn inactive-tab flex flex-col items-center">
-                <i data-lucide="pie-chart" class="w-6 h-6 mb-1"></i>
-            </button>
-        </nav>
+        </div>
 
     </div>
 
     <script>
-        // **********************************************
-        // ⚠️ ใส่ URL ของ Google Apps Script ที่นี่
-        // **********************************************
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKzHNqp893dFaCkyAl2KR4K4mrMWurRo6ZBhn6pgkihIDUZVtae991BQO_AFCTatzd/exec";
 
-        // Initialize Icons
-        lucide.createIcons();
+        /********************* CONFIG GOOGLE SHEET *********************/
+        // ใส่ค่าเองก่อนใช้งานจริง
+        /********************* CONFIG GOOGLE SCRIPT *********************/
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxsoTabpGPrNbqSM7I6c5HtFemZrsgFaLuMvGUPPZpurJL731U6Y-2BqWN-3A9LRtSq/exec";
+        /**************************************************************/
 
-        let allProducts = [];
+        /**************************************************************/
 
-        // --- Navigation Logic ---
-        function switchTab(pageId, btn) {
-            // Hide all pages
-            document.querySelectorAll('.page-section').forEach(el => el.classList.add('hide'));
-            // Show selected page
-            document.getElementById(pageId).classList.remove('hide');
+        let products = [];
+        let qrScanner;
 
-            // Update Bottom Nav UI
-            document.querySelectorAll('.nav-btn').forEach(el => {
-                el.classList.remove('active-tab');
-                el.classList.add('inactive-tab');
-            });
-            btn.classList.add('active-tab');
-            btn.classList.remove('inactive-tab');
+        /* Tabs */
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.onclick = () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
-            if (pageId === 'page-list' || pageId === 'page-dash') {
-                fetchData();
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.page).classList.add('active');
+
+                if (tab.dataset.page === 'stock') renderStock();
+                if (tab.dataset.page === 'report') renderReport();
             }
-        }
-
-        // --- Fetch Data ---
-        function refreshData() {
-            fetchData();
-            alert('อัพเดทข้อมูลเรียบร้อย');
-        }
-
-        function fetchData() {
-            fetch(`${SCRIPT_URL}?action=getProducts`)
-                .then(response => response.json())
-                .then(data => {
-                    allProducts = data;
-                    renderList(data);
-                    renderDashboard(data);
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        // --- Render List ---
-        function renderList(products) {
-            const grid = document.getElementById('inventory-grid');
-            grid.innerHTML = "";
-
-            if (products.length === 0) {
-                grid.innerHTML = `<div class="text-center text-gray-400 mt-10">ไม่พบข้อมูล</div>`;
-                return;
-            }
-
-            products.forEach(p => {
-                const isLow = p.qty <= p.min_alert;
-                const statusClass = isLow ? "text-red-500 bg-red-50 border-red-100" : "text-green-600 bg-green-50 border-green-100";
-                const statusText = isLow ? "ใกล้หมด" : "ปกติ";
-
-                const html = `
-                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-lg font-bold text-gray-500">
-                            ${p.name.charAt(0)}
-                        </div>
-                        <div>
-                            <div class="font-bold text-gray-800">${p.name}</div>
-                            <div class="text-xs text-gray-400">ID: ${p.id}</div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="font-bold text-lg">${p.qty} <span class="text-xs font-normal text-gray-400">${p.unit}</span></div>
-                        <span class="text-xs px-2 py-0.5 rounded-full border ${statusClass}">${statusText}</span>
-                    </div>
-                </div>
-            `;
-                grid.innerHTML += html;
-            });
-        }
-
-        // --- Filter Logic ---
-        function filterList(type) {
-            let filtered = [...allProducts];
-
-            // Reset Chip Styles (Simple toggle for demo)
-            document.querySelectorAll('.filter-chip').forEach(c => {
-                c.classList.remove('bg-black', 'text-white');
-                c.classList.add('bg-gray-100', 'text-gray-600');
-            });
-            event.target.classList.remove('bg-gray-100', 'text-gray-600');
-            event.target.classList.add('bg-black', 'text-white');
-
-            if (type === 'low') {
-                filtered = filtered.filter(p => p.qty <= p.min_alert);
-            } else if (type === 'sort') {
-                filtered.sort((a, b) => b.qty - a.qty);
-            }
-
-            renderList(filtered);
-        }
-
-        // --- Dashboard Logic ---
-        function renderDashboard(products) {
-            document.getElementById('dash-total').innerText = products.length;
-
-            const lowStockItems = products.filter(p => p.qty <= p.min_alert);
-            document.getElementById('dash-alert').innerText = lowStockItems.length;
-
-            const urgentList = document.getElementById('dash-urgent-list');
-            urgentList.innerHTML = "";
-
-            lowStockItems.slice(0, 5).forEach(p => {
-                urgentList.innerHTML += `
-                <li class="p-3 flex justify-between items-center text-sm">
-                    <span class="font-medium text-gray-700">${p.name}</span>
-                    <span class="text-red-500 font-bold text-xs bg-red-100 px-2 py-1 rounded">เหลือ ${p.qty} ${p.unit}</span>
-                </li>
-            `;
-            });
-        }
-
-        // --- Add Product Logic ---
-        document.getElementById('addForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-submit');
-            btn.innerText = "กำลังบันทึก...";
-            btn.disabled = true;
-
-            const data = {
-                id: document.getElementById('p_id').value,
-                name: document.getElementById('p_name').value,
-                unit: document.getElementById('p_unit').value,
-                qty: document.getElementById('p_qty').value,
-                min_alert: document.getElementById('p_min').value
-            };
-
-            fetch(`${SCRIPT_URL}?action=addProduct`, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            })
-                .then(res => res.json())
-                .then(result => {
-                    alert('บันทึกสำเร็จ!');
-                    document.getElementById('addForm').reset();
-                    btn.innerText = "บันทึกข้อมูล";
-                    btn.disabled = false;
-                    fetchData(); // update data in background
-                })
-                .catch(err => {
-                    alert('เกิดข้อผิดพลาด');
-                    btn.innerText = "บันทึกข้อมูล";
-                    btn.disabled = false;
-                });
         });
 
-        // --- QR Scanner Logic ---
-        function startScan() {
-            const html5QrCode = new Html5Qrcode("reader");
-            const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-                document.getElementById('p_id').value = decodedText;
-                html5QrCode.stop();
-                document.getElementById('reader').innerHTML = ""; // clear div
-            };
-            const config = {fps: 10, qrbox: {width: 250, height: 250}};
+        /* QR */
+        function toggleQR() {
+            const el = document.getElementById('qr-reader');
 
-            // Note: Camera requires HTTPS
-            html5QrCode.start({facingMode: "environment"}, config, qrCodeSuccessCallback)
-                .catch(err => {
-                    alert("ไม่สามารถเปิดกล้องได้ (ต้องใช้ผ่าน HTTPS หรือ localhost)");
-                });
+            if (el.style.display === 'block') {
+                el.style.display = 'none';
+                qrScanner.stop();
+            } else {
+                el.style.display = 'block';
+
+                qrScanner = new Html5Qrcode("qr-reader");
+
+                qrScanner.start(
+                    {facingMode: "environment"},
+                    {fps: 10, qrbox: 250},
+                    (text) => {
+                        document.getElementById('pid').value = text;
+                        toggleQR();
+                    }
+                );
+            }
         }
 
-        // Initial Load
-        fetchData();
+        /* Save Product */
+        function saveProduct() {
+            const item = {
+                id: pid.value,
+                name: pname.value,
+                unit: punit.value,
+                qty: Number(pqty.value),
+                min: Number(pmin.value),
+                updated: new Date().toISOString()
+            };
+
+            if (!item.id || !item.name) return alert('กรอกข้อมูลไม่ครบ');
+
+            const index = products.findIndex(p => p.id === item.id);
+
+            if (index > -1) products[index] = item;
+            else products.push(item);
+
+            syncToSheet();
+            clearForm();
+            alert('บันทึกสำเร็จ');
+        }
+
+        function clearForm() {
+            pid.value = ""; pname.value = ""; punit.value = "";
+            pqty.value = ""; pmin.value = "";
+        }
+
+        /* Render Stock */
+        function renderStock() {
+            let list = [...products];
+
+            const sort = sortSelect.value;
+            const alert = alertSelect.value;
+
+            list.sort((a, b) => sort === 'desc' ? b.qty - a.qty : a.qty - b.qty);
+
+            if (alert === 'low') {
+                list = list.filter(p => p.qty <= p.min);
+            }
+
+            stockTable.innerHTML = list.map(p => {
+
+                const low = p.qty <= p.min;
+
+                return `
+      <tr>
+        <td>${p.id}</td>
+        <td>${p.name}</td>
+        <td>${p.qty}</td>
+        <td>${p.unit}</td>
+        <td class="${low ? 'low' : ''}">
+          ${low ? 'ใกล้หมด' : 'ปกติ'}
+        </td>
+      </tr>`;
+
+            }).join('');
+        }
+
+        /* Report */
+        function renderReport() {
+            sumItems.innerText = products.length;
+
+            sumQty.innerText = products.reduce((s, p) => s + p.qty, 0);
+
+            sumLow.innerText = products.filter(p => p.qty <= p.min).length;
+        }
+
+
+        /* Google Sheet Sync */
+        async function loadFromSheet() {
+
+            const res = await fetch(SCRIPT_URL);
+            const data = await res.json();
+
+            products = data.map(r => ({
+                id: r[0],
+                name: r[1],
+                unit: r[2],
+                qty: Number(r[3]),
+                min: Number(r[4]),
+                updated: r[5]
+            }));
+
+        }
+
+
+        async function syncToSheet() {
+
+            await fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    id: pid.value,
+                    name: pname.value,
+                    unit: punit.value,
+                    qty: Number(pqty.value),
+                    min: Number(pmin.value),
+                    updated: new Date().toISOString()
+                })
+            });
+
+        }
+
+
+
+        /* Init */
+        loadFromSheet();
 
     </script>
-
 </body>
 
 </html>
