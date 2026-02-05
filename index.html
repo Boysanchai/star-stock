@@ -2,361 +2,349 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Star Stock - Instagram Style</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Star Stock - Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/html5-qrcode"></script>
 
     <style>
         :root {
+            --ig-blue: #0095f6;
             --ig-bg: #ffffff;
-            --ig-btn: #0095f6;
-            --ig-btn-hover: #1877f2;
-            --ig-border: #dbdbdb;
+            --ig-secondary-bg: #fafafa;
+            --ig-border: #efefef;
             --ig-text: #262626;
-            --ig-secondary-text: #8e8e8e;
-            --ig-danger: #ed4956;
-            --ig-gray-bg: #fafafa;
+            --ig-subtext: #8e8e8e;
+            --ig-danger: #ff3b30;
+            --shimmer: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0;
-            padding: 0;
-            font-family: 'Kanit', sans-serif;
+            font-family: 'IBM Plex Sans Thai', sans-serif;
             background-color: var(--ig-bg);
             color: var(--ig-text);
-            padding-bottom: 70px; /* Space for bottom nav */
+            overflow-x: hidden;
+            padding-bottom: 80px;
         }
 
-        /* Top Header */
+        /* --- Header --- */
         header {
             position: sticky;
             top: 0;
-            background: white;
-            border-bottom: 1px solid var(--ig-border);
-            padding: 10px 20px;
-            text-align: left;
-            font-size: 24px;
-            font-weight: 600;
-            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            height: 60px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--ig-border);
+            z-index: 1000;
+            justify-content: space-between;
         }
 
-        .logo-font {
-            font-family: 'Inter', sans-serif; /* จำลองฟอนต์โลโก้ */
-            letter-spacing: -1px;
-        }
+        .logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
 
-        /* Main Content */
-        .main-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding-top: 20px;
-        }
+        /* --- Layout Container --- */
+        .container { max-width: 500px; margin: 0 auto; padding: 16px; }
 
-        .page { display: none; padding: 0 15px; animation: fadeIn 0.3s ease; }
+        .page { display: none; animation: slideUp 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
         .page.active { display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        /* Story Style (Report Summary) */
-        .story-container {
+        /* --- Story Board (Report Summary) --- */
+        .story-bar {
             display: flex;
-            gap: 15px;
+            gap: 16px;
             overflow-x: auto;
-            padding: 10px 0 20px;
-            border-bottom: 1px solid var(--ig-border);
-            margin-bottom: 20px;
+            padding: 8px 0 20px;
+            scrollbar-width: none;
         }
 
-        .story-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 80px;
-        }
-
+        .story-item { text-align: center; flex-shrink: 0; }
         .story-circle {
-            width: 65px;
-            height: 65px;
+            width: 72px; height: 72px;
             border-radius: 50%;
-            border: 2px solid #ed4956; /* Gradient-like border */
             padding: 3px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 5px;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            margin-bottom: 6px;
         }
-
         .story-inner {
-            width: 100%;
-            height: 100%;
-            background: var(--ig-gray-bg);
+            width: 100%; height: 100%;
+            background: white;
             border-radius: 50%;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 600;
-            font-size: 18px;
+            align-items: center; justify-content: center;
+            font-weight: 700; font-size: 18px;
         }
+        .story-label { font-size: 12px; color: var(--ig-text); }
 
-        .story-label { font-size: 11px; color: var(--ig-text); }
-
-        /* Form Design */
-        .ig-card {
+        /* --- Form Elements --- */
+        .ig-input-group { margin-bottom: 12px; }
+        .ig-input {
+            width: 100%;
+            background: var(--ig-secondary-bg);
             border: 1px solid var(--ig-border);
             border-radius: 8px;
-            padding: 20px;
-            background: white;
-            margin-bottom: 20px;
+            padding: 12px;
+            font-size: 15px;
+            transition: border 0.2s;
         }
+        .ig-input:focus { outline: none; border-color: #a8a8a8; }
 
-        .form-input {
-            width: 100%;
-            background: var(--ig-gray-bg);
-            border: 1px solid var(--ig-border);
-            border-radius: 3px;
-            padding: 9px 7px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            box-sizing: border-box;
+        .btn-main {
+            background: var(--ig-blue);
+            color: white; border: none;
+            width: 100%; padding: 12px;
+            border-radius: 8px; font-weight: 600;
+            font-size: 15px; cursor: pointer;
+            margin-top: 10px;
         }
+        .btn-main:active { opacity: 0.7; transform: scale(0.98); }
 
-        .btn-primary {
-            background: var(--ig-btn);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 7px 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            font-size: 14px;
-        }
-
-        .btn-primary:hover { background: var(--ig-btn-hover); }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--ig-text);
-            border: 1px solid var(--ig-border);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        /* Stock Feed Style */
-        .stock-item {
-            border-bottom: 1px solid var(--ig-border);
-            padding: 15px 0;
+        /* --- List View (Stock Feed) --- */
+        .stock-card {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-
-        .stock-info h4 { margin: 0; font-size: 16px; }
-        .stock-info p { margin: 0; color: var(--ig-secondary-text); font-size: 14px; }
-
-        .stock-status { font-weight: 600; }
-        .status-low { color: var(--ig-danger); }
-        .status-ok { color: var(--ig-btn); }
-
-        /* Bottom Navigation */
-        nav.bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid var(--ig-border);
-            display: flex;
-            justify-content: space-around;
             padding: 12px 0;
+            border-bottom: 1px solid var(--ig-border);
+        }
+        .stock-thumb {
+            width: 44px; height: 44px;
+            background: var(--ig-secondary-bg);
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center; justify-content: center;
+            font-weight: 600; color: var(--ig-subtext);
+        }
+        .stock-details { flex: 1; }
+        .stock-name { font-weight: 600; font-size: 15px; margin: 0; }
+        .stock-meta { font-size: 13px; color: var(--ig-subtext); margin: 0; }
+        .stock-badge {
+            font-size: 12px; font-weight: 600;
+            padding: 4px 12px; border-radius: 4px;
+        }
+        .low-alert { background: #fff2f2; color: var(--ig-danger); }
+
+        /* --- Bottom Nav --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: white; border-top: 1px solid var(--ig-border);
+            display: flex; justify-content: space-around;
+            padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
             z-index: 1000;
         }
-
-        .nav-item {
-            cursor: pointer;
-            font-size: 24px;
-            color: var(--ig-text);
-            transition: transform 0.1s;
+        .nav-btn {
+            background: none; border: none; font-size: 24px;
+            color: var(--ig-text); cursor: pointer;
+            width: 50px; height: 44px;
         }
+        .nav-btn.active { color: var(--ig-blue); }
 
-        .nav-item.active { color: var(--ig-btn); }
-        .nav-item:active { transform: scale(0.9); }
-
-        #qr-reader {
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 15px;
+        /* --- Shimmer Loading --- */
+        .shimmer {
+            height: 20px;
+            background: var(--shimmer);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <span class="logo-font">StarStock</span>
-        <div style="font-size: 20px;">🔔</div>
+        <div class="logo">StarStock</div>
+        <div style="font-size: 24px;">📸</div>
     </header>
 
-    <div class="main-container">
+    <div class="container">
         
-        <div class="page active" id="report">
-            <div class="story-container">
+        <div class="page active" id="page-home">
+            <div class="story-bar">
                 <div class="story-item">
-                    <div class="story-circle"><div class="story-inner" id="sumItems">0</div></div>
-                    <div class="story-label">สินค้าทั้งหมด</div>
+                    <div class="story-circle"><div class="story-inner" id="h-total">0</div></div>
+                    <div class="story-label">รายการ</div>
                 </div>
                 <div class="story-item">
-                    <div class="story-circle" style="border-color: #10b981;"><div class="story-inner" id="sumQty">0</div></div>
-                    <div class="story-label">จำนวนรวม</div>
+                    <div class="story-circle" style="background: #10b981;"><div class="story-inner" id="h-qty">0</div></div>
+                    <div class="story-label">สต็อกรวม</div>
                 </div>
                 <div class="story-item">
-                    <div class="story-circle"><div class="story-inner" id="sumLow" style="color: var(--ig-danger);">0</div></div>
-                    <div class="story-label">ใกล้หมด</div>
+                    <div class="story-circle" style="background: #ef4444;"><div class="story-inner" id="h-low" style="color:red">0</div></div>
+                    <div class="story-label">ต้องเติม</div>
                 </div>
             </div>
 
-            <div class="ig-card">
-                <h3 style="margin-top:0">รายงานความเคลื่อนไหว</h3>
-                <p style="color: var(--ig-secondary-text); font-size: 14px;">ภาพรวมสินค้าในคลังของคุณวันนี้</p>
-                <button class="btn-primary" onclick="switchPage('stock')">ดูคลังสินค้าทั้งหมด</button>
+            <div style="margin-top: 20px;">
+                <h3 style="font-size: 16px; margin-bottom: 15px;">กิจกรรมล่าสุด</h3>
+                <div id="shimmer-load" style="display:none;">
+                    <div class="shimmer" style="width: 100%;"></div>
+                    <div class="shimmer" style="width: 80%;"></div>
+                </div>
+                <div id="recent-feed">
+                    <p style="color: var(--ig-subtext); text-align: center; margin-top: 40px;">ไม่มีความเคลื่อนไหว</p>
+                </div>
             </div>
         </div>
 
-        <div class="page" id="product">
-            <div class="ig-card">
-                <h3 style="margin-top:0">เพิ่มสินค้าใหม่</h3>
+        <div class="page" id="page-add">
+            <h3 style="font-size: 18px; margin-bottom: 20px;">บันทึกสินค้าใหม่</h3>
+            <div id="qr-container" style="display:none; margin-bottom: 15px;">
                 <div id="qr-reader"></div>
-                <button class="btn-outline" onclick="toggleQR()" style="margin-bottom:15px; width:100%">📷 สแกนบาร์โค้ด</button>
-                
-                <input class="form-input" id="pid" placeholder="รหัสสินค้า">
-                <input class="form-input" id="pname" placeholder="ชื่อสินค้า">
-                <div style="display:flex; gap:10px">
-                    <input class="form-input" id="punit" placeholder="หน่วยนับ">
-                    <input class="form-input" type="number" id="pqty" placeholder="คงเหลือ">
-                </div>
-                <input class="form-input" type="number" id="pmin" placeholder="จำนวนขั้นต่ำที่ต้องแจ้งเตือน">
-                
-                <button class="btn-primary" onclick="saveProduct()">บันทึกข้อมูล</button>
             </div>
+            <button class="btn-main" onclick="openScanner()" style="background:#efefef; color:#262626; margin-bottom:15px">📷 สแกนรหัสสินค้า</button>
+            
+            <div class="ig-input-group">
+                <input type="text" class="ig-input" id="pid" placeholder="รหัสสินค้า (Barcode)">
+            </div>
+            <div class="ig-input-group">
+                <input type="text" class="ig-input" id="pname" placeholder="ชื่อสินค้า">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="number" class="ig-input" id="pqty" placeholder="จำนวน">
+                <input type="text" class="ig-input" id="punit" placeholder="หน่วยนับ">
+            </div>
+            <div class="ig-input-group" style="margin-top:10px">
+                <input type="number" class="ig-input" id="pmin" placeholder="เตือนเมื่อเหลือน้อยกว่า...">
+            </div>
+            <button class="btn-main" id="btn-save" onclick="handleSave()">แชร์ลงคลังสินค้า</button>
         </div>
 
-        <div class="page" id="stock">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="margin:0">คลังสินค้า</h3>
-                <select id="alertSelect" onchange="renderStock()" style="border:none; background:none; font-weight:600">
-                    <option value="all">ทั้งหมด</option>
-                    <option value="low">ใกล้หมด</option>
-                </select>
+        <div class="page" id="page-stock">
+            <div class="ig-input-group" style="position: sticky; top: 60px; background: white; padding: 10px 0; z-index: 10;">
+                <input type="text" class="ig-input" id="searchInput" onkeyup="filterStock()" placeholder="🔍 ค้นหาสินค้าในคลัง...">
             </div>
-            
-            <div id="stockFeed">
+            <div id="stock-list">
                 </div>
         </div>
 
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchPage('report')" data-target="report">🏠</div>
-        <div class="nav-item" onclick="switchPage('product')" data-target="product">➕</div>
-        <div class="nav-item" onclick="switchPage('stock')" data-target="stock">📦</div>
+        <button class="nav-btn active" onclick="nav('page-home', this)">🏠</button>
+        <button class="nav-btn" onclick="nav('page-add', this)">➕</button>
+        <button class="nav-btn" onclick="nav('page-stock', this)">📦</button>
     </nav>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxsoTabpGPrNbqSM7I6c5HtFemZrsgFaLuMvGUPPZpurJL731U6Y-2BqWN-3A9LRtSq/exec";
         let products = [];
-        let qrScanner;
 
-        function switchPage(pageId) {
+        // Navigation
+        function nav(pageId, btn) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            document.querySelector(`[data-target="${pageId}"]`).classList.add('active');
-
-            if(pageId === 'stock') renderStock();
-            if(pageId === 'report') renderReport();
+            btn.classList.add('active');
+            if(pageId === 'page-home') updateSummary();
+            if(pageId === 'page-stock') renderStockList();
         }
 
-        function toggleQR() {
-            const el = document.getElementById('qr-reader');
-            if (el.style.display === 'block') {
-                el.style.display = 'none';
-                qrScanner.stop();
-            } else {
-                el.style.display = 'block';
-                qrScanner = new Html5Qrcode("qr-reader");
-                qrScanner.start({facingMode: "environment"}, {fps: 10, qrbox: 250}, (text) => {
-                    document.getElementById('pid').value = text;
-                    toggleQR();
-                });
+        // Scanner
+        let html5QrCode;
+        function openScanner() {
+            document.getElementById('qr-container').style.display = 'block';
+            html5QrCode = new Html5Qrcode("qr-reader");
+            html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, 
+                (decodedText) => {
+                    document.getElementById('pid').value = decodedText;
+                    html5QrCode.stop();
+                    document.getElementById('qr-container').style.display = 'none';
+                    // Auto fill if exists
+                    const p = products.find(x => x.id == decodedText);
+                    if(p) {
+                        document.getElementById('pname').value = p.name;
+                        document.getElementById('punit').value = p.unit;
+                    }
+                }
+            );
+        }
+
+        // Save Data
+        async function handleSave() {
+            const btn = document.getElementById('btn-save');
+            const data = {
+                id: document.getElementById('pid').value,
+                name: document.getElementById('pname').value,
+                qty: document.getElementById('pqty').value,
+                unit: document.getElementById('punit').value,
+                min: document.getElementById('pmin').value,
+                updated: new Date().toISOString()
+            };
+
+            if(!data.id || !data.name) return alert('กรุณาระบุข้อมูลให้ครบ');
+
+            btn.disabled = true;
+            btn.innerText = "กำลังอัปโหลด...";
+
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data)});
+                alert('บันทึกสำเร็จ!');
+                location.reload(); // รีโหลดเพื่อความง่ายในการอัปเดตข้อมูล
+            } catch(e) {
+                alert('เกิดข้อผิดพลาด');
+                btn.disabled = false;
+                btn.innerText = "แชร์ลงคลังสินค้า";
             }
         }
 
-        async function saveProduct() {
-            const item = {
-                id: pid.value,
-                name: pname.value,
-                unit: punit.value,
-                qty: Number(pqty.value),
-                min: Number(pmin.value)
-            };
-            if (!item.id || !item.name) return alert('กรุณาระบุรหัสและชื่อ');
-            
-            await fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({...item, updated: new Date().toISOString()})
-            });
-            alert('บันทึกเรียบร้อย');
-            clearForm();
-            loadFromSheet();
-        }
-
-        function clearForm() {
-            pid.value = ""; pname.value = ""; punit.value = ""; pqty.value = ""; pmin.value = "";
-        }
-
-        function renderStock() {
-            const filter = document.getElementById('alertSelect').value;
-            let list = [...products];
-            if(filter === 'low') list = list.filter(p => p.qty <= p.min);
-
-            document.getElementById('stockFeed').innerHTML = list.map(p => {
-                const isLow = p.qty <= p.min;
-                return `
-                    <div class="stock-item">
-                        <div class="stock-info">
-                            <h4>${p.name}</h4>
-                            <p>รหัส: ${p.id} | ${p.qty} ${p.unit}</p>
-                        </div>
-                        <div class="stock-status ${isLow ? 'status-low' : 'status-ok'}">
-                            ${isLow ? '⚠️ เติมด่วน' : 'ปกติ'}
-                        </div>
+        // Render Functions
+        function renderStockList() {
+            const list = document.getElementById('stock-list');
+            list.innerHTML = products.map(p => `
+                <div class="stock-card">
+                    <div class="stock-thumb">${p.name.charAt(0)}</div>
+                    <div class="stock-details">
+                        <p class="stock-name">${p.name}</p>
+                        <p class="stock-meta">คงเหลือ: ${p.qty} ${p.unit}</p>
                     </div>
-                `;
-            }).join('');
+                    ${p.qty <= p.min ? '<span class="stock-badge low-alert">เติมสินค้า</span>' : ''}
+                </div>
+            `).join('');
         }
 
-        function renderReport() {
-            document.getElementById('sumItems').innerText = products.length;
-            document.getElementById('sumQty').innerText = products.reduce((s, p) => s + p.qty, 0);
-            document.getElementById('sumLow').innerText = products.filter(p => p.qty <= p.min).length;
+        function filterStock() {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.stock-card');
+            cards.forEach(card => {
+                const name = card.querySelector('.stock-name').innerText.toLowerCase();
+                card.style.display = name.includes(val) ? 'flex' : 'none';
+            });
         }
 
-        async function loadFromSheet() {
-            const res = await fetch(SCRIPT_URL);
-            const data = await res.json();
-            products = data.map(r => ({
-                id: r[0], name: r[1], unit: r[2], qty: Number(r[3]), min: Number(r[4])
-            }));
-            renderReport();
+        function updateSummary() {
+            document.getElementById('h-total').innerText = products.length;
+            document.getElementById('h-qty').innerText = products.reduce((a,b) => a + Number(b.qty), 0);
+            document.getElementById('h-low').innerText = products.filter(p => Number(p.qty) <= Number(p.min)).length;
         }
 
-        loadFromSheet();
+        async function init() {
+            document.getElementById('shimmer-load').style.display = 'block';
+            try {
+                const res = await fetch(SCRIPT_URL);
+                const data = await res.json();
+                products = data.map(r => ({id: r[0], name: r[1], unit: r[2], qty: r[3], min: r[4]}));
+                updateSummary();
+                document.getElementById('shimmer-load').style.display = 'none';
+            } catch(e) {
+                console.error("Load error");
+            }
+        }
+
+        init();
     </script>
 </body>
 </html>
