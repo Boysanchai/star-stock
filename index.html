@@ -3,368 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Star Stock Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Star Stock - Instagram Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/html5-qrcode"></script>
 
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-sub: #64748b;
-            --danger: #ef4444;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --border: #e2e8f0;
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --ig-bg: #ffffff;
+            --ig-btn: #0095f6;
+            --ig-btn-hover: #1877f2;
+            --ig-border: #dbdbdb;
+            --ig-text: #262626;
+            --ig-secondary-text: #8e8e8e;
+            --ig-danger: #ed4956;
+            --ig-gray-bg: #fafafa;
         }
 
         body {
             margin: 0;
-            font-family: 'IBM Plex Sans Thai', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            line-height: 1.6;
+            padding: 0;
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--ig-bg);
+            color: var(--ig-text);
+            padding-bottom: 70px; /* Space for bottom nav */
         }
 
-        /* Header & Navigation */
+        /* Top Header */
         header {
-            background: var(--card-bg);
-            padding: 1.5rem;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .tabs {
-            display: flex;
-            max-width: 600px;
-            margin: 1.5rem auto;
-            background: #e2e8f0;
-            padding: 4px;
-            border-radius: 16px;
-            gap: 4px;
-        }
-
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            cursor: pointer;
+            position: sticky;
+            top: 0;
+            background: white;
+            border-bottom: 1px solid var(--ig-border);
+            padding: 10px 20px;
+            text-align: left;
+            font-size: 24px;
             font-weight: 600;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            color: var(--text-sub);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .tab.active {
-            background: var(--card-bg);
-            color: var(--primary);
-            box-shadow: var(--shadow);
+        .logo-font {
+            font-family: 'Inter', sans-serif; /* จำลองฟอนต์โลโก้ */
+            letter-spacing: -1px;
         }
 
-        /* Layout Content */
-        .content {
-            padding: 0 20px 40px;
-            max-width: 800px;
-            margin: auto;
+        /* Main Content */
+        .main-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding-top: 20px;
         }
 
-        .page {
-            display: none;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        .page { display: none; padding: 0 15px; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
 
-        /* Card Design */
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            margin-bottom: 24px;
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        h2 {
-            margin-top: 0;
-            font-size: 1.25rem;
+        /* Story Style (Report Summary) */
+        .story-container {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-main);
-            border-bottom: 2px solid var(--bg);
-            padding-bottom: 12px;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 0 20px;
+            border-bottom: 1px solid var(--ig-border);
             margin-bottom: 20px;
         }
 
-        /* Forms */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
         }
 
-        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+        .story-circle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            border: 2px solid #ed4956; /* Gradient-like border */
+            padding: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
+        }
 
-        .form-group { margin-bottom: 18px; }
-
-        label {
-            font-size: 0.875rem;
+        .story-inner {
+            width: 100%;
+            height: 100%;
+            background: var(--ig-gray-bg);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-weight: 600;
-            color: var(--text-sub);
-            margin-bottom: 6px;
-            display: block;
+            font-size: 18px;
         }
 
-        input, select {
+        .story-label { font-size: 11px; color: var(--ig-text); }
+
+        /* Form Design */
+        .ig-card {
+            border: 1px solid var(--ig-border);
+            border-radius: 8px;
+            padding: 20px;
+            background: white;
+            margin-bottom: 20px;
+        }
+
+        .form-input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            font-size: 1rem;
+            background: var(--ig-gray-bg);
+            border: 1px solid var(--ig-border);
+            border-radius: 3px;
+            padding: 9px 7px;
+            margin-bottom: 10px;
+            font-size: 14px;
             box-sizing: border-box;
-            transition: border-color 0.2s;
         }
 
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            ring: 2px solid #c7d2fe;
-        }
-
-        /* Buttons */
-        button {
-            width: 100%;
-            background: var(--primary);
+        .btn-primary {
+            background: var(--ig-btn);
             color: white;
             border: none;
-            padding: 14px;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 4px;
+            padding: 7px 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        button:hover { background: var(--primary-hover); transform: translateY(-1px); }
-
-        .btn-scan {
-            background: #f1f5f9;
-            color: var(--text-main);
-            margin-bottom: 20px;
-            border: 1px dashed var(--text-sub);
-        }
-
-        /* Summary Dashboard */
-        .summary-box {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-        }
-
-        .summary {
-            padding: 20px;
-            border-radius: var(--radius);
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .sum-blue { background: linear-gradient(135deg, #6366f1, #a855f7); }
-        .sum-green { background: linear-gradient(135deg, #10b981, #3b82f6); }
-        .sum-red { background: linear-gradient(135deg, #f43f5e, #fb923c); }
-
-        .summary h3 { margin: 0; font-size: 0.9rem; opacity: 0.9; font-weight: 400; }
-        .summary p { margin: 10px 0 0; font-size: 2rem; font-weight: 700; }
-
-        /* Tables */
-        .table-container { overflow-x: auto; }
-        table {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
+            font-size: 14px;
         }
 
-        th {
-            text-align: left;
-            padding: 12px;
-            background: var(--bg);
-            color: var(--text-sub);
+        .btn-primary:hover { background: var(--ig-btn-hover); }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--ig-text);
+            border: 1px solid var(--ig-border);
+            padding: 5px 10px;
+            border-radius: 4px;
             font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
+            font-size: 14px;
         }
 
-        td {
-            padding: 15px 12px;
-            border-bottom: 1px solid var(--bg);
-            font-size: 0.95rem;
+        /* Stock Feed Style */
+        .stock-item {
+            border-bottom: 1px solid var(--ig-border);
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .stock-info h4 { margin: 0; font-size: 16px; }
+        .stock-info p { margin: 0; color: var(--ig-secondary-text); font-size: 14px; }
+
+        .stock-status { font-weight: 600; }
+        .status-low { color: var(--ig-danger); }
+        .status-ok { color: var(--ig-btn); }
+
+        /* Bottom Navigation */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--ig-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 1000;
         }
 
-        .badge-low { background: #fee2e2; color: #ef4444; }
-        .badge-ok { background: #dcfce7; color: #10b981; }
+        .nav-item {
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--ig-text);
+            transition: transform 0.1s;
+        }
+
+        .nav-item.active { color: var(--ig-btn); }
+        .nav-item:active { transform: scale(0.9); }
 
         #qr-reader {
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
-            border: none !important;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
-
 <body>
 
-    <header>📦 Star Stock Pro</header>
+    <header>
+        <span class="logo-font">StarStock</span>
+        <div style="font-size: 20px;">🔔</div>
+    </header>
 
-    <div class="tabs">
-        <div class="tab active" data-page="product">📦 จัดการสินค้า</div>
-        <div class="tab" data-page="stock">📊 คลังสินค้า</div>
-        <div class="tab" data-page="report">📈 สรุปผล</div>
-    </div>
+    <div class="main-container">
+        
+        <div class="page active" id="report">
+            <div class="story-container">
+                <div class="story-item">
+                    <div class="story-circle"><div class="story-inner" id="sumItems">0</div></div>
+                    <div class="story-label">สินค้าทั้งหมด</div>
+                </div>
+                <div class="story-item">
+                    <div class="story-circle" style="border-color: #10b981;"><div class="story-inner" id="sumQty">0</div></div>
+                    <div class="story-label">จำนวนรวม</div>
+                </div>
+                <div class="story-item">
+                    <div class="story-circle"><div class="story-inner" id="sumLow" style="color: var(--ig-danger);">0</div></div>
+                    <div class="story-label">ใกล้หมด</div>
+                </div>
+            </div>
 
-    <div class="content">
+            <div class="ig-card">
+                <h3 style="margin-top:0">รายงานความเคลื่อนไหว</h3>
+                <p style="color: var(--ig-secondary-text); font-size: 14px;">ภาพรวมสินค้าในคลังของคุณวันนี้</p>
+                <button class="btn-primary" onclick="switchPage('stock')">ดูคลังสินค้าทั้งหมด</button>
+            </div>
+        </div>
 
-        <div class="page active" id="product">
-            <div class="card">
-                <h2><span>✏️</span> ข้อมูลสินค้า</h2>
-
+        <div class="page" id="product">
+            <div class="ig-card">
+                <h3 style="margin-top:0">เพิ่มสินค้าใหม่</h3>
                 <div id="qr-reader"></div>
-                <button type="button" class="btn-scan" onclick="toggleQR()">📷 สแกนบาร์โค้ด / QR Code</button>
-
-                <div class="form-group">
-                    <label>รหัสสินค้า</label>
-                    <input id="pid" placeholder="ระบุรหัสหรือสแกนเพื่อค้นหา">
+                <button class="btn-outline" onclick="toggleQR()" style="margin-bottom:15px; width:100%">📷 สแกนบาร์โค้ด</button>
+                
+                <input class="form-input" id="pid" placeholder="รหัสสินค้า">
+                <input class="form-input" id="pname" placeholder="ชื่อสินค้า">
+                <div style="display:flex; gap:10px">
+                    <input class="form-input" id="punit" placeholder="หน่วยนับ">
+                    <input class="form-input" type="number" id="pqty" placeholder="คงเหลือ">
                 </div>
-
-                <div class="form-group">
-                    <label>ชื่อสินค้า</label>
-                    <input id="pname" placeholder="ระบุชื่อสินค้า">
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>หน่วยนับ</label>
-                        <input id="punit" placeholder="เช่น ชิ้น, กล่อง">
-                    </div>
-                    <div class="form-group">
-                        <label>จำนวนคงเหลือ</label>
-                        <input type="number" id="pqty" placeholder="0">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>จำนวนขั้นต่ำที่ต้องการให้เตือน</label>
-                    <input type="number" id="pmin" placeholder="5">
-                </div>
-
-                <button onclick="saveProduct()"><span>💾</span> บันทึกข้อมูลสินค้า</button>
+                <input class="form-input" type="number" id="pmin" placeholder="จำนวนขั้นต่ำที่ต้องแจ้งเตือน">
+                
+                <button class="btn-primary" onclick="saveProduct()">บันทึกข้อมูล</button>
             </div>
         </div>
 
         <div class="page" id="stock">
-            <div class="card">
-                <h2><span>📋</span> รายการสินค้าทั้งหมด</h2>
-
-                <div class="form-grid" style="margin-bottom: 20px;">
-                    <select id="sortSelect" onchange="renderStock()">
-                        <option value="desc">📉 เรียง: มาก ไป น้อย</option>
-                        <option value="asc">📈 เรียง: น้อย ไป มาก</option>
-                    </select>
-
-                    <select id="alertSelect" onchange="renderStock()">
-                        <option value="all">🔍 ดูทั้งหมด</option>
-                        <option value="low">⚠️ ดูเฉพาะของใกล้หมด</option>
-                    </select>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>รหัส</th>
-                                <th>ชื่อสินค้า</th>
-                                <th>คงเหลือ</th>
-                                <th>สถานะ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stockTable"></tbody>
-                    </table>
-                </div>
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin:0">คลังสินค้า</h3>
+                <select id="alertSelect" onchange="renderStock()" style="border:none; background:none; font-weight:600">
+                    <option value="all">ทั้งหมด</option>
+                    <option value="low">ใกล้หมด</option>
+                </select>
             </div>
-        </div>
-
-        <div class="page" id="report">
-            <div class="card">
-                <h2><span>📊</span> ภาพรวมสต็อก</h2>
-                <div class="summary-box">
-                    <div class="summary sum-blue">
-                        <h3>รายการสินค้าทั้งหมด</h3>
-                        <p id="sumItems">0</p>
-                    </div>
-                    <div class="summary sum-green">
-                        <h3>จำนวนชิ้นรวม</h3>
-                        <p id="sumQty">0</p>
-                    </div>
-                    <div class="summary sum-red">
-                        <h3>รายการที่ต้องเติม</h3>
-                        <p id="sumLow">0</p>
-                    </div>
+            
+            <div id="stockFeed">
                 </div>
-            </div>
         </div>
 
     </div>
 
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchPage('report')" data-target="report">🏠</div>
+        <div class="nav-item" onclick="switchPage('product')" data-target="product">➕</div>
+        <div class="nav-item" onclick="switchPage('stock')" data-target="stock">📦</div>
+    </nav>
+
     <script>
-        /********************* CONFIG GOOGLE SCRIPT *********************/
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxsoTabpGPrNbqSM7I6c5HtFemZrsgFaLuMvGUPPZpurJL731U6Y-2BqWN-3A9LRtSq/exec";
-        
         let products = [];
         let qrScanner;
 
-        /* Tabs Logic */
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.onclick = () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                tab.classList.add('active');
-                document.getElementById(tab.dataset.page).classList.add('active');
-                if (tab.dataset.page === 'stock') renderStock();
-                if (tab.dataset.page === 'report') renderReport();
-            }
-        });
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            document.querySelector(`[data-target="${pageId}"]`).classList.add('active');
 
-        /* QR Scanner Logic */
+            if(pageId === 'stock') renderStock();
+            if(pageId === 'report') renderReport();
+        }
+
         function toggleQR() {
             const el = document.getElementById('qr-reader');
             if (el.style.display === 'block') {
@@ -373,113 +290,70 @@
             } else {
                 el.style.display = 'block';
                 qrScanner = new Html5Qrcode("qr-reader");
-                qrScanner.start(
-                    {facingMode: "environment"},
-                    {fps: 10, qrbox: 250},
-                    (text) => {
-                        document.getElementById('pid').value = text;
-                        toggleQR();
-                        // ค้นหาข้อมูลสินค้าเดิมถ้ามี
-                        const existing = products.find(p => p.id === text);
-                        if(existing) {
-                            document.getElementById('pname').value = existing.name;
-                            document.getElementById('punit').value = existing.unit;
-                            document.getElementById('pqty').value = existing.qty;
-                            document.getElementById('pmin').value = existing.min;
-                        }
-                    }
-                );
+                qrScanner.start({facingMode: "environment"}, {fps: 10, qrbox: 250}, (text) => {
+                    document.getElementById('pid').value = text;
+                    toggleQR();
+                });
             }
         }
 
-        /* Save logic */
         async function saveProduct() {
-            const btn = event.target;
-            const originalText = btn.innerHTML;
-            
             const item = {
-                id: document.getElementById('pid').value,
-                name: document.getElementById('pname').value,
-                unit: document.getElementById('punit').value,
-                qty: Number(document.getElementById('pqty').value),
-                min: Number(document.getElementById('pmin').value)
+                id: pid.value,
+                name: pname.value,
+                unit: punit.value,
+                qty: Number(pqty.value),
+                min: Number(pmin.value)
             };
-
-            if (!item.id || !item.name) return alert('กรุณากรอกรหัสและชื่อสินค้า');
-
-            btn.innerHTML = "⌛ กำลังบันทึก...";
-            btn.disabled = true;
-
-            try {
-                const index = products.findIndex(p => p.id === item.id);
-                if (index > -1) products[index] = item;
-                else products.push(item);
-
-                await syncToSheet(item);
-                clearForm();
-                alert('✨ บันทึกสำเร็จแล้ว');
-            } catch (e) {
-                alert('เกิดข้อผิดพลาดในการบันทึก');
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
+            if (!item.id || !item.name) return alert('กรุณาระบุรหัสและชื่อ');
+            
+            await fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({...item, updated: new Date().toISOString()})
+            });
+            alert('บันทึกเรียบร้อย');
+            clearForm();
+            loadFromSheet();
         }
 
         function clearForm() {
-            document.getElementById('pid').value = ""; 
-            document.getElementById('pname').value = ""; 
-            document.getElementById('punit').value = "";
-            document.getElementById('pqty').value = ""; 
-            document.getElementById('pmin').value = "";
+            pid.value = ""; pname.value = ""; punit.value = ""; pqty.value = ""; pmin.value = "";
         }
 
         function renderStock() {
+            const filter = document.getElementById('alertSelect').value;
             let list = [...products];
-            const sort = document.getElementById('sortSelect').value;
-            const alertFilter = document.getElementById('alertSelect').value;
+            if(filter === 'low') list = list.filter(p => p.qty <= p.min);
 
-            list.sort((a, b) => sort === 'desc' ? b.qty - a.qty : a.qty - b.qty);
-            if (alertFilter === 'low') list = list.filter(p => p.qty <= p.min);
-
-            document.getElementById('stockTable').innerHTML = list.map(p => {
+            document.getElementById('stockFeed').innerHTML = list.map(p => {
                 const isLow = p.qty <= p.min;
                 return `
-                    <tr>
-                        <td><small>${p.id}</small></td>
-                        <td><strong>${p.name}</strong></td>
-                        <td>${p.qty} ${p.unit}</td>
-                        <td>
-                            <span class="badge ${isLow ? 'badge-low' : 'badge-ok'}">
-                                ${isLow ? '⚠️ ใกล้หมด' : '✅ ปกติ'}
-                            </span>
-                        </td>
-                    </tr>`;
+                    <div class="stock-item">
+                        <div class="stock-info">
+                            <h4>${p.name}</h4>
+                            <p>รหัส: ${p.id} | ${p.qty} ${p.unit}</p>
+                        </div>
+                        <div class="stock-status ${isLow ? 'status-low' : 'status-ok'}">
+                            ${isLow ? '⚠️ เติมด่วน' : 'ปกติ'}
+                        </div>
+                    </div>
+                `;
             }).join('');
         }
 
         function renderReport() {
             document.getElementById('sumItems').innerText = products.length;
-            document.getElementById('sumQty').innerText = products.reduce((s, p) => s + p.qty, 0).toLocaleString();
+            document.getElementById('sumQty').innerText = products.reduce((s, p) => s + p.qty, 0);
             document.getElementById('sumLow').innerText = products.filter(p => p.qty <= p.min).length;
         }
 
         async function loadFromSheet() {
-            try {
-                const res = await fetch(SCRIPT_URL);
-                const data = await res.json();
-                products = data.map(r => ({
-                    id: r[0], name: r[1], unit: r[2], 
-                    qty: Number(r[3]), min: Number(r[4]), updated: r[5]
-                }));
-            } catch(e) { console.error("Load failed", e); }
-        }
-
-        async function syncToSheet(item) {
-            await fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({...item, updated: new Date().toISOString()})
-            });
+            const res = await fetch(SCRIPT_URL);
+            const data = await res.json();
+            products = data.map(r => ({
+                id: r[0], name: r[1], unit: r[2], qty: Number(r[3]), min: Number(r[4])
+            }));
+            renderReport();
         }
 
         loadFromSheet();
